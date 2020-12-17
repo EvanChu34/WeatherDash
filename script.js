@@ -10,6 +10,10 @@ var cityList = JSON.parse(localStorage.getItem("search")) || [];
 
 var APIkey = "&appid=7deee8827dfbf279b7a9d2bd52377acb";
 
+function kelToFar(K){
+    return Math.floor((K - 273.15) *1.8 +32);
+}
+
 function getWeatherInfo(cityName){
     
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName + APIkey;
@@ -65,15 +69,22 @@ function getWeatherInfo(cityName){
             cardForcastDate.setAttribute("class","mt-3 mb-0 forcast-date");
             cardForcastDate.innerHTML = cardMonth + "/" + cardDay + "/" + cardYear;
             forcastCard[i].append(cardForcastDate);
-
-
-
+            var cardForcastWeather = document.createElement("img");
+            cardForcastWeather.setAttribute("src","https://openweathermap.org/img/wn/" + response.data.list[cardIndex].weather[0].icon + "@2x.png");  
+            forcastCard[i].append(cardForcastWeather);
+            var cardTemp = document.createElement("p");
+            cardTemp.innerHTML = "Temp: " + response.data.list[cardIndex].main.temp;
+            forcastCard[i].append(cardTemp);
+            var cardHumid = document.createElement("p");
+            cardHumid.innerHTML = "Humidity: " + response.data.list[cardIndex].main.humidity + "%";
+            forcastCard[i].append(cardHumid);
         }
     
     
     })
 
 }
+
 
 
 // search button
@@ -83,7 +94,6 @@ $("#searchBTn").on("click", function(){
     cityList.push(searchCity);
     localStorage.setItem("search",JSON.stringify(cityList));
     createCityList();
-
 })
 
 // Search button history
