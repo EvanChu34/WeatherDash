@@ -18,7 +18,12 @@ function getWeatherInfo(cityName){
         method: "GET"
     }).then(function(response){
         console.log(response);
-        nameEl.innerHTML = response;
+        var currentDate = new Date(response.data.dt);
+        console.log(currentDate);
+        var day = currentDate.getDate();
+        var month = currentDate.getMonth();
+        var year = currentDate.getFullYear();
+        nameEl.innerHTML = response.data.name + (month + "/" + day + "/" + year);
         var weatherIcon = response.data.weather[0].icon;
         currentPic.setAttribute("src","https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png");
         currentTemp.innerHTML = "Temperature: " + response.data.main.temp 
@@ -48,7 +53,22 @@ function getWeatherInfo(cityName){
         method:"GET"
     }).then(function(response){
         console.log(response);
-        
+        const forcastCard = document.querySelectorAll(".forcast");
+        for (var i=0; i<forcastCard.length; i++){
+            forcastCard[i].innerHTML = "";
+            var cardIndex = i*8 + 4;
+            var cardDate = new Date(response.data.cityList[cardIndex].dt);
+            var cardDay = cardDate.getDate();
+            var cardMonth = cardDate.getMonth();
+            var cardYear = cardDate.getFullYear();
+            var cardForcastDate = document.createElement("p");
+            cardForcastDate.setAttribute("class","mt-3 mb-0 forcast-date");
+            cardForcastDate.innerHTML = cardMonth + "/" + cardDay + "/" + cardYear;
+            forcastCard[i].append(cardForcastDate);
+
+
+
+        }
     
     
     })
