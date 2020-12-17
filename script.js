@@ -1,5 +1,6 @@
 var input = document.getElementById("#city-input")
 var nameEl = document.getElementById("#selected-city")
+var currentPic = document.getElementById("#current-pic")
 var currentTemp = document.getElementById("#temperature");
 var currentHumid = document.getElementById("#humidity");
 var currentWindS = document.getElementById("#wind-speed");
@@ -19,17 +20,27 @@ function getWeatherInfo(cityName){
     }).then(function(response){
         console.log(response);
         nameEl.innerHTML = response;
-        currentTemp.innerHTML = response.list[0].main.temp
-        currentHumid.innerHTML = response.list[0].main.humidity
-        currentWindS.innerHTML = response.list[0].wind.speed
+        var weatherIcon = response.data.weather[0].icon;
+        currentPic.setAttribute("src","https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png");
+        currentTemp.innerHTML = "Temperature: " + response.data.main.temp 
+        currentHumid.innerHTML = "Humidity: " + response.data.main.humidity
+        currentWindS.innerHTML = "wind Speed: " + response.data.wind.speed
+    
+        //UVI response
+        var lat = response.data.coord.lat;
+        var lon = response.data.coord.lon;
+        var UVQueryURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + APIKey + "&cnt=1"
+        $.ajax({
+            url:UVQueryURL,
+            method: "GET"
+        }).then(function(response)){
+            currentUVI.innerHTML =  ;
+        }
         
+
         
-        //currentUVI.innerHTML = response.list[0].main.
 
-
-
-
-    });
+    })
 
 }
 
@@ -61,6 +72,7 @@ function createCityList(){
     }
 }
 
+createCityList();
 // display the main data
 
 
@@ -69,4 +81,5 @@ function createCityList(){
 
 //
 
+function init();
 
