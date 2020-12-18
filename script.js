@@ -1,3 +1,6 @@
+
+function startPage();
+
 var input = document.getElementById("#city-input")
 var nameEl = document.getElementById("#selected-city")
 var currentPic = document.getElementById("#current-pic")
@@ -6,7 +9,7 @@ var currentHumid = document.getElementById("#humidity");
 var currentWindS = document.getElementById("#wind-speed");
 var currentUVI = document.getElementById("#UV-index");
 var cityHistory = document.getElementById("#city-list");
-var cityList = JSON.parse(localStorage.getItem("search")) || [];
+var cityList = JSON.parse(localStorage.getItem("#search")) || [];
 
 var APIkey = "&appid=7deee8827dfbf279b7a9d2bd52377acb";
 
@@ -15,7 +18,6 @@ function kelToFar(K){
 }
 
 function getWeatherInfo(cityName){
-    
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName + APIkey;
     $.ajax({
         url: queryURL,
@@ -34,6 +36,7 @@ function getWeatherInfo(cityName){
         currentHumid.innerHTML = "Humidity: " + response.data.main.humidity + "%";
         currentWindS.innerHTML = "wind Speed: " + response.data.wind.speed + "MPH";       
     })
+    
     // UV 
     var lat = response.data.coord.lat;
     var lon = response.data.coord.lon;
@@ -49,6 +52,7 @@ function getWeatherInfo(cityName){
         currentUVI.innerHTML = "UV Index: ";
         currentUVI.append(UVIndex);
     })
+    
     // 5 day forcast 
     var cityID = response.data.id;
     var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + APIKey;
@@ -84,7 +88,6 @@ function getWeatherInfo(cityName){
     })
 
 }
-
 
 
 // search button
