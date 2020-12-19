@@ -65,7 +65,7 @@ function startPage(){
             var year = currentDate.getFullYear();
             nameEl.innerHTML = response.name + " (" + month + "/" + day + "/" + year +") " ;
             let weatherIcon = response.weather[0].icon;
-            currentPic.setAttribute("src","https://openweathermap.org/img/wn/"+weatherIcon+"@2x.png");
+            currentPic.setAttribute("src","https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png");
             currentPic.setAttribute("alt",response.weather[0].description);
             currentTemp.innerHTML = "Temperature: " + kelToFar(response.main.temp) + " &#176F"; 
             currentHumid.innerHTML = "Humidity: " + response.main.humidity + "%";
@@ -85,7 +85,7 @@ function startPage(){
             UVIndex.innerHTML = response.value;
             currentUVI.innerHTML = "UV Index: ";
             currentUVI.append(UVIndex);
-        });
+        })
     
         // 5 day forcast 
         let cityID = response.id;
