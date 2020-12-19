@@ -1,16 +1,17 @@
 
 function startPage(){
+    
     const input = document.getElementById("city-input");
-    const nameEl = document.getElementById("selected-city");
     const searchBtn = document.getElementById("searchBtn");
     const clearBtn = document.getElementById("clear-history");
+    const nameEl = document.getElementById("selected-city");
     const currentPic = document.getElementById("current-pic");
     const currentTemp = document.getElementById("temperature");
     const currentHumid = document.getElementById("humidity");
     const currentWindS = document.getElementById("wind-speed");
     const currentUVI = document.getElementById("UV-index");
     const cityHistory = document.getElementById("city-list");
-    let cityList = JSON.parse(localStorage.getItem("search") || []);
+    let cityList = JSON.parse(localStorage.getItem("search")) || [];
     console.log(cityList);
     
     var APIkey = "7deee8827dfbf279b7a9d2bd52377acb";
@@ -34,23 +35,27 @@ function startPage(){
             currentTemp.innerHTML = "Temperature: " + kelToFar(response.main.temp) + " &#176F"; 
             currentHumid.innerHTML = "Humidity: " + response.main.humidity + "%";
             currentWindS.innerHTML = "Wind Speed: " + response.wind.speed + "MPH"; 
-        // UV 
+       
+            // UV 
         let lat = response.coord.lat;
         let lon = response.coord.lon;
         let UVQueryURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=7deee8827dfbf279b7a9d2bd52377ac&cnt=1";
+        
         $.ajax({
             url: UVQueryURL,
             method:"GET"
         }).then(function(response){
             let UVIndex = document.createElement("span");
             UVIndex.setAttribute("class","badge badge-danger");
-            UVIndex.innerHTML = response.data[0].value;
+            UVIndex.innerHTML = response.value;
             currentUVI.innerHTML = "UV Index: ";
             currentUVI.append(UVIndex);
         });
+        
         // 5 day forcast 
         let cityID = response.id;
         let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID +"&appid=7deee8827dfbf279b7a9d2bd52377ac";
+        
         $.ajax({
             url: forecastQueryURL,
             method:"GET"
@@ -60,7 +65,7 @@ function startPage(){
             for (i=0; i<forcastCard.length; i++){
                 forcastCard[i].innerHTML = "";
                 const cardIndex = i*8 + 4;
-                const cardDate = new Date(response.data.cityList[cardIndex]);
+                const cardDate = new Date(response.cityList[cardIndex].dt*1000);
                 const cardDay = cardDate.getDate();
                 const cardMonth = cardDate.getMonth();
                 const cardYear = cardDate.getFullYear();s
@@ -80,7 +85,7 @@ function startPage(){
             }
         })});
     }
-
+    
     // search button
     searchBtn.addEventListener("click", function(){
         const searchCity = input.value;
