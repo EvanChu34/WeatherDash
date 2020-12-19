@@ -1,14 +1,16 @@
 
 function startPage(){
-    const input = document.getElementById("city-input")
-    const nameEl = document.getElementById("selected-city")
-    const currentPic = document.getElementById("current-pic")
+    const input = document.getElementById("city-input");
+    const nameEl = document.getElementById("selected-city");
+    const searchBtn = document.getElementById("searchBtn");
+    const clearBtn = document.getElementById("clear-history");
+    const currentPic = document.getElementById("current-pic");
     const currentTemp = document.getElementById("temperature");
     const currentHumid = document.getElementById("humidity");
     const currentWindS = document.getElementById("wind-speed");
     const currentUVI = document.getElementById("UV-index");
     const cityHistory = document.getElementById("city-list");
-    let cityList = JSON.parse(localStorage.getItem("search")) || [];
+    let cityList = JSON.parse(localStorage.getItem("search") || []);
 
 
     var APIkey = "&appid=7deee8827dfbf279b7a9d2bd52377acb";
@@ -24,7 +26,7 @@ function startPage(){
             method: "GET"
         }).then(function(response){
             console.log(response);
-            var currentDate = new Date(response.data.dt);
+            var currentDate = new Date(response.data.dt*1000);
             console.log(currentDate);
             var day = currentDate.getDate();
             var month = currentDate.getMonth();
@@ -44,7 +46,6 @@ function startPage(){
             url: UVQueryURL,
             method:"GET"
         }).then(function(response){
-            console.log(response);
             let UVIndex = document.createElement("span");
             UVIndex.setAttribute("class","badge badge-danger");
             UVIndex.innerHTML = response.data[0].value;
@@ -63,7 +64,7 @@ function startPage(){
             for (i=0; i<forcastCard.length; i++){
                 forcastCard[i].innerHTML = "";
                 const cardIndex = i*8 + 4;
-                const cardDate = new Date(response.data.cityList[cardIndex].dt *1000);
+                const cardDate = new Date(response.data.cityList[cardIndex]);
                 const cardDay = cardDate.getDate();
                 const cardMonth = cardDate.getMonth();
                 const cardYear = cardDate.getFullYear();s
@@ -85,7 +86,7 @@ function startPage(){
     }
 
     // search button
-    $("#searchBTn").on("click", function(){
+    searchBtn.addEventListener("click", function(){
         const searchCity = input.Value;
         getWeatherInfo(searchCity);
         cityList.push(searchCity);
@@ -93,29 +94,32 @@ function startPage(){
         createCityList();
     })
 
+    clearBtn.addEventListener("click", function() {
+        cityList = [];
+        createCityList();
+    })
+
     // Search button history
     function createCityList(){
         cityHistory.innerHTML = "";
         for (var i=0; i<cityList.length; i++){
-            var cityItem = document.createElement("input");
+            const cityItem = document.createElement("input");
             cityItem.setAttribute("type","text");
             cityItem.setAttribute("readonly",true);
             cityItem.setAttribute("class","form-contol d-block bg-white");
             cityItem.setAttribute("value", cityList[i]);
             cityItem.addEventListener("click",function(){
-            getWeatherInfo(cityItem.value);
+                getWeatherInfo(cityItem.value);
             })
             cityHistory.append(cityItem);
         }
-
     }   
-    
+ 
     createCityList();
     if (cityList.length > 0){
         getWeatherInfo(cityList[cityList.length - 1]);
-    }   
+    }
 
 }
-
 startPage();
 
