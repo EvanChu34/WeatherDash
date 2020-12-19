@@ -7,26 +7,29 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
 </head>
 
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <span class="navbar-brand mb-0 h1 w-100 text-center">Weather Dashboard</span>
     </nav>
+
     <div class="container">
+
         <div class="row">
             <div class="col-md-3">
+
                 <p class="city-search">City Search</p>
                   <div class="input-group mb-3">
                     <button class="btn btn-outline-secondary" type="button" id="searchBtn">Search</button>
-                    <input type="text" class="city-input" placeholder="City Name" aria-label="cityName" aria-describedby="button-addon1">
+                    <input id="city-input" placeholder="City Name" aria-label="cityName" aria-describedby="button-addon1">
                   </div>
                 <div class="row">
                 <button class="btn btn-primary mb-3" type="button" id="clear-history">Clear history</button>
                 <form id="city-list"></form>   
 
                 </div>  
+                
             </div>
 
             <div class="col-md-9">
