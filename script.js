@@ -1,6 +1,5 @@
 
 function startPage(){
-    
     const input = document.getElementById("city-input");
     const searchBtn = document.getElementById("searchBtn");
     const clearBtn = document.getElementById("clear-history");
@@ -12,9 +11,45 @@ function startPage(){
     const currentUVI = document.getElementById("UV-index");
     const cityHistory = document.getElementById("city-list");
     let cityList = JSON.parse(localStorage.getItem("search")) || [];
-    console.log(cityList);
-    
     var APIkey = "7deee8827dfbf279b7a9d2bd52377acb";
+
+    searchBtn.addEventListener("click", function(){
+        const searchCity = input.value;
+        getWeatherInfo(searchCity);
+        cityList.push(searchCity);
+        localStorage.setItem("search",JSON.stringify(cityList));
+        createCityList();
+    })
+
+    clearBtn.addEventListener("click", function() {
+        cityList = [];
+        createCityList();
+    })
+
+    function createCityList(){
+        cityHistory.innerHTML = "";
+        for (var i=0; i<cityList.length; i++){
+            const cityItem = document.createElement("input");
+            cityItem.setAttribute("type","text");
+            cityItem.setAttribute("readonly",true);
+            cityItem.setAttribute("class","form-contol d-block bg-white");
+            cityItem.setAttribute("value", cityList[i]);
+            cityItem.addEventListener("click",function(){
+                getWeatherInfo(cityItem.value);
+            })
+            cityHistory.append(cityItem);
+        }
+    }       
+    
+    function kelToFar(K){
+        return Math.floor((K - 273.15) *1.8 +32);
+    }
+
+    createCityList();
+    if (cityList.length > 0){
+        getWeatherInfo(cityList[cityList.length - 1]);
+    }
+
 
     function getWeatherInfo(cityName){
         let queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName + "&appid=" + APIkey;
@@ -36,7 +71,7 @@ function startPage(){
             currentHumid.innerHTML = "Humidity: " + response.main.humidity + "%";
             currentWindS.innerHTML = "Wind Speed: " + response.wind.speed + "MPH"; 
        
-            // UV 
+        // UV 
         let lat = response.coord.lat;
         let lon = response.coord.lon;
         let UVQueryURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=7deee8827dfbf279b7a9d2bd52377ac&cnt=1";
@@ -51,7 +86,7 @@ function startPage(){
             currentUVI.innerHTML = "UV Index: ";
             currentUVI.append(UVIndex);
         });
-        
+    
         // 5 day forcast 
         let cityID = response.id;
         let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID +"&appid=7deee8827dfbf279b7a9d2bd52377ac";
@@ -86,44 +121,7 @@ function startPage(){
         })});
     }
     
-    // search button
-    searchBtn.addEventListener("click", function(){
-        const searchCity = input.value;
-        getWeatherInfo(searchCity);
-        cityList.push(searchCity);
-        localStorage.setItem("search",JSON.stringify(cityList));
-        createCityList();
-    })
 
-    clearBtn.addEventListener("click", function() {
-        cityList = [];
-        createCityList();
-    })
-
-    // Search button history
-    function createCityList(){
-        cityHistory.innerHTML = "";
-        for (var i=0; i<cityList.length; i++){
-            const cityItem = document.createElement("input");
-            cityItem.setAttribute("type","text");
-            cityItem.setAttribute("readonly",true);
-            cityItem.setAttribute("class","form-contol d-block bg-white");
-            cityItem.setAttribute("value", cityList[i]);
-            cityItem.addEventListener("click",function(){
-                getWeatherInfo(cityItem.value);
-            })
-            cityHistory.append(cityItem);
-        }
-    }   
-    
-    function kelToFar(K){
-        return Math.floor((K - 273.15) *1.8 +32);
-    }
-
-    createCityList();
-    if (cityList.length > 0){
-        getWeatherInfo(cityList[cityList.length - 1]);
-    }
 
 }
 
